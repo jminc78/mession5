@@ -1,0 +1,36 @@
+# Mission 5 — Backend (FastAPI + Transformers)
+FROM python:3.13-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONPATH=/app/src \
+    PATH="/app/.venv/bin:$PATH" \
+    API_HOST=0.0.0.0 \
+    API_PORT=8000 \
+    OUTPUTS_DIR=/app/outputs \
+    NOVELS_DIR=/app/data/novels \
+    MISSION2_DIR=/app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml uv.lock .python-version ./
+RUN pip install --upgrade pip \
+    && pip install uv \
+    && uv sync --frozen --no-dev
+
+COPY src ./src
+COPY backend.py ./backend.py
+COPY .env.example ./
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD curl -fsS "http://127.0.0.1:8000/api/health" || exit 1
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

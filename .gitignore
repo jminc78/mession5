@@ -1,0 +1,14 @@
+.DS_Store
+.idea/
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/.env
+**/node_modules/
+**/dist/
+jenkins/jenkins_home/
+
+# GitHub 100MB 제한 — 가중치는 로컬/볼륨으로 유지
+backend/outputs/*/final/model.safetensors
+backend/outputs/*/checkpoint-*/
+backend/outputs/train.log

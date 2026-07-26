@@ -1,0 +1,25 @@
+# Suggested / CI essentials (preinstalled so setup wizard need not download)
+cloudbees-folder
+antisamy-markup-formatter
+build-timeout
+credentials-binding
+timestamper
+ws-cleanup
+ant
+gradle
+workflow-aggregator
+github-branch-source
+pipeline-github-lib
+pipeline-stage-view
+git
+ssh-slaves
+matrix-auth
+pam-auth
+ldap
+email-ext
+mailer
+dark-theme
+docker-workflow
+docker-plugin
+configuration-as-code
+job-dsl

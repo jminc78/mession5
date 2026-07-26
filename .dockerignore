@@ -1,0 +1,12 @@
+.git
+.idea
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+**/.env
+backend/outputs/*/checkpoint-*
+backend/outputs/train.log
+jenkins/jenkins_home
+*.md
+agent-transcripts
