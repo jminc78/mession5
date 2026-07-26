@@ -1,4 +1,4 @@
-"""미션 5 설정 — MongoDB는 .env, 모델은 로컬 outputs/."""
+"""미션 5 설정 — 로컬 MongoDB(.env) + 모델 outputs/."""
 
 from __future__ import annotations
 

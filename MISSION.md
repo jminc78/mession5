@@ -23,6 +23,7 @@ mission5/
 ## 사전 준비
 
 - Docker Desktop
+- **로컬 MongoDB** (이미 설치·실행 중이어야 함 — Compose로 DB를 띄우지 않음)
 - 모델 `final` (약 1.4GB) — GitHub에는 올리지 않음 (`model.safetensors` gitignore)
 
 ```bash
@@ -99,11 +100,10 @@ docker compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 | `backend` | FastAPI + 모델 (`:8000` 내부) |
 | `nginx` | React 빌드 정적파일 + `/api` 프록시 (`:8005→80`) |
 
-모델·소설 텍스트는 볼륨으로 마운트합니다.
+모델은 볼륨으로 마운트합니다. DB는 호스트 MongoDB(`host.docker.internal:27017`)에 연결합니다.
 
 ```
 ./backend/outputs → /app/outputs
-./backend/data/novels → /app/data/novels
 ```
 
 ## 개발 모드 (Docker 없이)

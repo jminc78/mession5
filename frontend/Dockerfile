@@ -1,18 +1,58 @@
-# Mission 5 — Frontend (standalone SPA image)
-FROM node:20-alpine AS build
+# Mission 5 — Backend + Frontend(nginx)
+# UI:  http://127.0.0.1:8005
+# API: http://127.0.0.1:8005/api/health
+# Docs: http://127.0.0.1:8005/docs
 
-WORKDIR /app
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mission5_backend
+    environment:
+      API_HOST: "0.0.0.0"
+      API_PORT: "8000"
+      OUTPUTS_DIR: /app/outputs
+      MISSION2_DIR: /app
+      # 호스트에 이미 설치된 MongoDB 사용 (DB 컨테이너 없음)
+      MONGO_HOST: ${MONGO_HOST:-host.docker.internal}
+      MONGO_PORT: ${MONGO_PORT:-27017}
+      MONGO_DB: ${MONGO_DB:-mydb}
+      MONGO_USER: ${MONGO_USER:-kogo3039}
+      MONGO_PASSWORD: ${MONGO_PASSWORD:-math1106}
+      MONGO_AUTH_SOURCE: ${MONGO_AUTH_SOURCE:-admin}
+      DATABASE_URL: ${DATABASE_URL:-}
+    volumes:
+      # 호스트의 final 모델을 마운트 (이미지에 무게 넣지 않음)
+      - ./backend/outputs:/app/outputs:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    expose:
+      - "8000"
+    networks:
+      - mission5_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/api/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 90s
 
-COPY package.json package-lock.json ./
-RUN npm ci
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: mission5_nginx
+    ports:
+      - "8005:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - mission5_net
+    restart: unless-stopped
 
-COPY index.html vite.config.js ./
-COPY public ./public
-COPY src ./src
-
-RUN npm run build
-
-FROM nginx:1.27-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+networks:
+  mission5_net:
+    driver: bridge

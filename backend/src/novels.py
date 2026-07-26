@@ -1,4 +1,4 @@
-"""소설 목록·본문 로드 (MongoDB 우선, data/novels 폴백)."""
+"""소설 목록·본문 로드 (로컬 MongoDB)."""
 
 from __future__ import annotations
 

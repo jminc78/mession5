@@ -11,7 +11,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     API_HOST=0.0.0.0 \
     API_PORT=8000 \
     OUTPUTS_DIR=/app/outputs \
-    NOVELS_DIR=/app/data/novels \
     MISSION2_DIR=/app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
